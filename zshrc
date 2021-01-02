@@ -107,8 +107,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-#alias ls="exa"
-#alias la="exa -al"
 alias ls='lsd'
 alias l='ls -l'
 alias la='ls -a'
@@ -116,6 +114,8 @@ alias lla='ls -la'
 alias lt='ls --tree'
 
 alias lg='lazygit'
+
+alias cat="bat"
 
 alias mux="tmuxinator"
 

@@ -6,6 +6,7 @@
 #fi
 
 # install zsh
+sudo apt update
 sudo apt install zsh git thefuck build-essential -y
 
 # install lazygit
@@ -13,6 +14,8 @@ sudo add-apt-repository ppa:lazygit-team/release
 sudo apt-get update
 sudo apt-get install lazygit
 
+# install bat
+sudo apt install bat
 
 # Set ZSH, ZSH_CUSTOM
 ZSH="${HOME}/.oh-my-zsh"
