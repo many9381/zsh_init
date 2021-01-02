@@ -6,10 +6,12 @@
 #fi
 
 # install zsh
-sudo apt install zsh thefuck build-essential -y
+sudo apt install zsh git thefuck build-essential -y
 
-# install snap
-#sudo 
+# install lazygit
+sudo add-apt-repository ppa:lazygit-team/release
+sudo apt-get update
+sudo apt-get install lazygit
 
 
 # Set ZSH, ZSH_CUSTOM
@@ -36,13 +38,18 @@ git clone https://github.com/chrissicool/zsh-256color $ZSH_CUSTOM/plugins/zsh-25
 # copy zshrc to local zshrc
 cp ./zshrc ~/.zshrc
 
+# Install fzf
+echo "Install fzf"
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
 # change default shell
 echo "Change default shell to zsh"
 
 zsh=$(which zsh)
 chsh -s "${zsh}"
 
-#install lsd
+# Install lsd
 echo "Install lsd"
 wget https://github.com/Peltoche/lsd/releases/download/0.19.0/lsd_0.19.0_amd64.deb
 sudo dpkg -i lsd_0.19.0_amd64.deb
@@ -50,6 +57,11 @@ sudo dpkg -i lsd_0.19.0_amd64.deb
 echo "Remove lsd install file"
 rm lsd_0.19.0_amd64.deb
 
+# Install zplug
+curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+
+# Install zplugins
+zplug install | zsh
 
 zsh
 
