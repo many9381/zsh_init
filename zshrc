@@ -115,19 +115,19 @@ alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
 
+alias lg='lazygit'
+
 alias mux="tmuxinator"
 
 alias vim="nvim"
 alias vi="nvim"
 alias vimdiff="nvim -d"
-alias typora="open -a typora"
 export EDITOR=/usr/local/bin/nvim
 
 #export ZPLUG_HOME=/usr/local/opt/zplug
 source ~/.zplug/init.zsh
 
 zplug "wookayin/fzf-fasd"
-zplug "wfxr/forgit"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
