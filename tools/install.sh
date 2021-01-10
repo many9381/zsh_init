@@ -39,7 +39,7 @@ git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerl
 git clone https://github.com/chrissicool/zsh-256color $ZSH_CUSTOM/plugins/zsh-256color
 
 # copy zshrc to local zshrc
-cp ./zshrc ~/.zshrc
+cp ../zshrc ~/.zshrc
 
 # Install fzf
 echo "Install fzf"
