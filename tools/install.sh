@@ -17,6 +17,9 @@ sudo apt-get install lazygit
 # install bat
 sudo apt install bat
 
+# Add bat link
+sudo ln -s /usr/bin/batcat /usr/bin/bat
+
 # Set ZSH, ZSH_CUSTOM
 ZSH="${HOME}/.oh-my-zsh"
 ZSH_CUSTOM="$ZSH/custom"
