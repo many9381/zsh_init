@@ -7,7 +7,7 @@
 
 # install zsh
 sudo apt update
-sudo apt install zsh git thefuck build-essential -y
+sudo apt install zsh git curl thefuck build-essential -y
 
 # install lazygit
 sudo add-apt-repository ppa:lazygit-team/release
