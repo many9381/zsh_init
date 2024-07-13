@@ -54,3 +54,5 @@ update_zshrc "alias vim" "nvim"
 update_zshrc "alias vi" "nvim"
 update_zshrc "alias vimdiff" "nvim -d"
 update_zshrc "export EDITOR" "$(which nvim)"
+
+update_zshrc "POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD" "true"
