@@ -40,15 +40,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 zsh_shell=$(command -v zsh)
 
 # If this user's login shell is already "zsh", do not attempt to switch.
-if [ ! "$(basename -- "$SHELL")" = "zsh" ]; then
-    if [ -z "${SUDO_USER:-}" ]; then
-        # Run from root
-        chsh -s "$zsh_shell" "$USER"
-    else
-        # Run from user(sudo)
-        chsh -s "$zsh_shell" "$SUDO_USER"
-    fi
-fi
+run_as_sudo chsh -s "$zsh_shell" "$USER"
 
 # Install Additional package
 run_as_sudo apt install thefuck -y
