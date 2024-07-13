@@ -73,7 +73,7 @@ update_zshrc() {
     local config_value="$2"
     local config_command="$config_name=\"$config_value\""
 
-    if grep -q "^$config_name=" "$ZSHRC_FILE"; then
+    if grep -q "^$config_name=" "$ZSH_RC"; then
         # if config name exist
         sed -i'' -e "s|^$config_name=.*|$config_command|" "$ZSH_RC"
     else
