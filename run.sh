@@ -2,7 +2,7 @@
 
 OS_ARCHLINUX="Arch Linux"
 OS_ENDEAVOUR="EndeavourOS"
-OS_UBUNTU="UBUNTU"
+OS_UBUNTU="Ubuntu"
 
 # Check OS
 check_os() {
