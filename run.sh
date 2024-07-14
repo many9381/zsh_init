@@ -4,11 +4,14 @@ OS_ARCHLINUX="Arch Linux"
 OS_ENDEAVOUR="EndeavourOS"
 OS_UBUNTU="Ubuntu"
 
-source scripts/common/common.sh
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
-if ! check_run_as_root; then
-	echo "Please run as root"
-	exit
+
+source "$SCRIPT_DIR/scripts/common/common.sh"
+
+if ! is_run_as_root && ! is_user_can_sudo; then
+	echo "Please run as root or sudo"
+	return
 fi
 
 # Check OS
@@ -17,10 +20,10 @@ echo "Operating System: $OS_NAME"
 
 if [ "$OS_NAME" = "$OS_UBUNTU" ]; then
 	source ubuntu/setup.sh
-	exit
+	return
 fi
 
 if [ "$OS_NAME" = "$OS_ARCHLINUX" ] || [ "$OS_NAME" = "$OS_ENDEAVOUR" ]; then
 	source arch/setup.sh
-	exit
+	return
 fi

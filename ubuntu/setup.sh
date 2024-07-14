@@ -1,21 +1,22 @@
 #!/bin/bash
 
-apt update
+run_as_sudo apt update
 
 # Install build-essential
-apt install git curl build-essential -y
+run_as_sudo apt install git curl build-essential -y
 
 # Install neovim
-apt install neovim -y
+run_as_sudo apt install neovim -y
 
 # Install bat
-apt install bat -y
+run_as_sudo apt install bat -y
 
 # Add bat link
-ln -s /usr/bin/batcat /usr/bin/bat
+run_as_sudo ln -s /usr/bin/batcat /usr/bin/bat
 
 # Install tmux, tmuxinator, oh-my-tmux
-apt install tmux tmuxinator -y
+run_as_sudo apt install tmux tmuxinator -y
+
 
 if [ -d "$HOME/.tmux" ]; then
     echo "The directory oh-my-tmux already Installed"
@@ -28,7 +29,7 @@ ln -sf ~/.tmux/.tmux.conf ~/.tmux.conf
 cp ~/.tmux/.tmux.conf.local ~
 
 # Install zsh
-apt install zsh -y
+run_as_sudo apt install zsh -y
 
 # Install oh-my-zsh
 # ZSH="${HOME}/.oh-my-zsh"
@@ -50,4 +51,4 @@ if [ ! "$(basename -- "$SHELL")" = "zsh" ]; then
 fi
 
 # Install Additional package
-apt install thefuck -y
+run_as_sudo apt install thefuck -y
