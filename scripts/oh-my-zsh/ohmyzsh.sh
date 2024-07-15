@@ -54,7 +54,7 @@ install_oh_my_zsh() {
     add_plugin "ohmyzsh-full-autoupdate"
 
     # Install powerlevel10k
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerleve1l0k"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
     sed -i -e 's/^ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSH_RC"
     cp ./config/p10k/.p10k.zsh ~
 
