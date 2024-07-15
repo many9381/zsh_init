@@ -21,10 +21,10 @@ echo "Operating System: $OS_NAME"
 
 if [ "$OS_NAME" = "$OS_UBUNTU" ]; then
 	source ubuntu/setup.sh
-	return
+	exit
 fi
 
 if [ "$OS_NAME" = "$OS_ARCHLINUX" ] || [ "$OS_NAME" = "$OS_ENDEAVOUR" ]; then
 	source arch/setup.sh
-	return
+	exit
 fi
