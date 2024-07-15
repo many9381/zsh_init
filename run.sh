@@ -8,9 +8,10 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 
 source "$SCRIPT_DIR/scripts/common/common.sh"
+source "$SCRIPT_DIR/scripts/oh-my-zsh/ohmyzsh.sh"
 
 if ! is_run_as_root && ! is_user_can_sudo; then
-	echo "Please run as root or sudo"
+	echo "Please run as root or check sudo"
 	return
 fi
 

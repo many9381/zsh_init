@@ -11,6 +11,9 @@ run_as_sudo apt install neovim -y
 # Install bat
 run_as_sudo apt install bat -y
 
+# Install fzf
+run_as_sudo apt install fzf -y
+
 # Add bat link
 run_as_sudo ln -s /usr/bin/batcat /usr/bin/bat
 
@@ -32,15 +35,22 @@ cp ~/.tmux/.tmux.conf.local ~
 run_as_sudo apt install zsh -y
 
 # Install oh-my-zsh
-# ZSH="${HOME}/.oh-my-zsh"
-# ZSH_CUSTOM="$ZSH/custom"
-
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
-zsh_shell=$(command -v zsh)
-
-# If this user's login shell is already "zsh", do not attempt to switch.
-run_as_sudo chsh -s "$zsh_shell" "$USER"
+install_oh_my_zsh
 
 # Install Additional package
 run_as_sudo apt install thefuck -y
+
+# Install lsd
+run_as_sudo apt install lsd -y
+# Setting up an alias for lsd in .zshrc
+update_zshrc "alias ls"     "lsd"
+update_zshrc "alias l"      "ls -l"
+update_zshrc "alias la"     "ls -a"
+update_zshrc "alias lla"    "ls -la"
+update_zshrc "alias lt"     "ls --tree"
+
+# Setting up an alias for nvim(neovim) in .zshrc
+update_zshrc "alias vim" "nvim"
+update_zshrc "alias vi" "nvim"
+update_zshrc "alias vimdiff" "nvim -d"
+update_zshrc "export EDITOR" "$(which nvim)"
