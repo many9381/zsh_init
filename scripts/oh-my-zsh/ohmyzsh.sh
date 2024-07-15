@@ -4,8 +4,8 @@ ZSH=${ZSH:-$HOME/.oh-my-zsh}
 ZSH_CUSTOM=${ZSH_CUSTOM:-$ZSH/custom}
 ZSH_RC="$HOME/.zshrc"
 
+current_plugins=$(grep -oP '^[^#]*plugins=\(\K[^\)]*' "$ZSH_RC")
 PLUGINS=()
-current_plugins=$(grep -oP 'plugins=\(\K[^\)]*' "$ZSH_RC")
 
 add_plugin() {
     local plugin="$1"
@@ -14,6 +14,16 @@ add_plugin() {
     else
         echo "Plugin '$plugin' already exists in .zshrc"
     fi
+}
+
+update_plugin() {
+    for PLUGIN in "${PLUGINS[@]}"; do
+        current_plugins="$current_plugins $PLUGIN"
+    done
+
+    updated_plugins=$(echo "$current_plugins" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+    sed -i -e "/^plugins=/s/plugins=\(.*\)/plugins=(${updated_plugins})/" "$ZSH_RC"
+
 }
 
 # Install oh-my-zsh
@@ -55,6 +65,7 @@ install_oh_my_zsh() {
     # install tmuxinator
     add_plugin tmuxinator
 
+    update_plugin
 }
 
 update_zshrc() {
