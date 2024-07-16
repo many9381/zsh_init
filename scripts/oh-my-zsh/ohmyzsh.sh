@@ -4,7 +4,7 @@ ZSH=${ZSH:-$HOME/.oh-my-zsh}
 ZSH_CUSTOM=${ZSH_CUSTOM:-$ZSH/custom}
 ZSH_RC="$HOME/.zshrc"
 
-current_plugins=$(grep -oP '^[^#]*plugins=\(\K[^\)]*' "$ZSH_RC")
+current_plugins=$(grep -oP '^[^#]*plugins=\(\K[^\)]*' "$ZSH_RC" 2>/dev/null || echo "")
 PLUGINS=()
 
 add_plugin() {
