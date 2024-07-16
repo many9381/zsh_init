@@ -1,23 +1,27 @@
 #!/bin/bash
 
-apt update
+run_as_sudo apt update
 
 # Install build-essential
-apt install git curl build-essential -y
+run_as_sudo apt install git curl build-essential -y
 
 # Install neovim
-apt install neovim -y
+run_as_sudo apt install neovim -y
 
 # Install bat
-apt install bat -y
+run_as_sudo apt install bat -y
+
+# Install fzf
+run_as_sudo apt install fzf -y
 
 # Add bat link
-ln -s /usr/bin/batcat /usr/bin/bat
+run_as_sudo ln -s /usr/bin/batcat /usr/bin/bat
 
 # Install tmux, tmuxinator, oh-my-tmux
-apt install tmux tmuxinator -y
+run_as_sudo apt install tmux tmuxinator -y
 
-if [ -d "~/.tmux" ]; then
+
+if [ -d "$HOME/.tmux" ]; then
     echo "The directory oh-my-tmux already Installed"
     echo "Delete and Reinstall oh-my-tmux"
     rm -rf .tmux
@@ -28,20 +32,27 @@ ln -sf ~/.tmux/.tmux.conf ~/.tmux.conf
 cp ~/.tmux/.tmux.conf.local ~
 
 # Install zsh
-apt install zsh -y
+run_as_sudo apt install zsh -y
 
 # Install oh-my-zsh
-ZSH="${HOME}/.oh-my-zsh"
-ZSH_CUSTOM="$ZSH/custom"
-
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
-$zsh_shell=$(command -v zsh)
-
-# If this user's login shell is already "zsh", do not attempt to switch.
-if [ ! "$(basename -- "$SHELL")" = "zsh" ]; then
-    chsh -s "$zsh" "$USER"
-fi
+install_oh_my_zsh
 
 # Install Additional package
-apt install thefuck -y
+run_as_sudo apt install thefuck -y
+
+# Install lsd
+run_as_sudo apt install lsd -y
+# Setting up an alias for lsd in .zshrc
+update_zshrc "alias ls"     "lsd"
+update_zshrc "alias l"      "ls -l"
+update_zshrc "alias la"     "ls -a"
+update_zshrc "alias lla"    "ls -la"
+update_zshrc "alias lt"     "ls --tree" true
+
+# Setting up an alias for nvim(neovim) in .zshrc
+update_zshrc "alias vim" "nvim"
+update_zshrc "alias vi" "nvim"
+update_zshrc "alias vimdiff" "nvim -d"
+update_zshrc "export EDITOR" "$(which nvim)" true
+
+update_zshrc "POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD" "true" true
