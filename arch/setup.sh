@@ -1,10 +1,11 @@
 #!/bin/bash
 
-run_as_sudo pacman -Syu
+run_as_sudo pacman -Syu --noconfirm
 
 # Install build-essential
 run_as_sudo pacman -S git curl base-devel --noconfirm
 
+# Install yay
 if ! command_exists yay; then
     git clone https://aur.archlinux.org/yay.git "$HOME"
     cd "$HOME/yay" && makepkg -si --noconfirm
