@@ -42,17 +42,6 @@ run_as_sudo apt install thefuck -y
 
 # Install lsd
 run_as_sudo apt install lsd -y
-# Setting up an alias for lsd in .zshrc
-update_zshrc "alias ls"     "lsd"
-update_zshrc "alias l"      "ls -l"
-update_zshrc "alias la"     "ls -a"
-update_zshrc "alias lla"    "ls -la"
-update_zshrc "alias lt"     "ls --tree" true
 
-# Setting up an alias for nvim(neovim) in .zshrc
-update_zshrc "alias vim" "nvim"
-update_zshrc "alias vi" "nvim"
-update_zshrc "alias vimdiff" "nvim -d"
-update_zshrc "export EDITOR" "$(which nvim)" true
-
-update_zshrc "POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD" "true" true
+# Setting up an alias
+setup_alias_zshrc
