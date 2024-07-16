@@ -57,6 +57,7 @@ install_oh_my_zsh() {
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
     sed -i -e 's/^ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSH_RC"
     cp ./config/p10k/.p10k.zsh ~
+    echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> "$ZSH_RC"
 
 
     # Install zsh-interactive-cd
