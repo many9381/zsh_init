@@ -57,7 +57,7 @@ install_oh_my_zsh() {
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
     sed -i -e 's/^ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSH_RC"
     cp ./config/p10k/.p10k.zsh ~
-    echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> "$ZSH_RC"
+    echo -e "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh\n" >> "$ZSH_RC"
 
 
     # Install zsh-interactive-cd
@@ -72,13 +72,18 @@ install_oh_my_zsh() {
 update_zshrc() {
     local config_name="$1"
     local config_value="$2"
+    local add_newline="${3:-false}"
     local config_command="$config_name=\"$config_value\""
 
     if grep -q "^$config_name=" "$ZSH_RC"; then
         # if config name exist
-        sed -i'' -e "s|^$config_name=.*|$config_command|" "$ZSH_RC"
+        sed -i -e "s|^$config_name=.*|$config_command|" "$ZSH_RC"
     else
         # if config name does not exist, append it to the end
-        echo "$config_command" >> "$ZSH_RC"
+        if [ "$add_newline" = true ]; then
+            echo -e "$config_command\n" >> "$ZSH_RC"
+        else
+            echo "$config_command" >> "$ZSH_RC"
+        fi
     fi
 }
