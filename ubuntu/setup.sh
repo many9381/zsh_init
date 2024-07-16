@@ -27,7 +27,7 @@ if [ -d "$HOME/.tmux" ]; then
     rm -rf .tmux
 fi
 
-git clone https://github.com/gpakosz/.tmux.git ~
+git clone https://github.com/gpakosz/.tmux.git ~/.tmux
 ln -sf ~/.tmux/.tmux.conf ~/.tmux.conf
 cp ~/.tmux/.tmux.conf.local ~
 
