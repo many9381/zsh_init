@@ -3,6 +3,7 @@
 OS_ARCHLINUX="Arch Linux"
 OS_ENDEAVOUR="EndeavourOS"
 OS_UBUNTU="Ubuntu"
+OS_DEBIAN_RPI="Debian GNU/Linux"
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
@@ -19,7 +20,7 @@ fi
 OS_NAME=$(sed -n 's/^NAME=//p' /etc/os-release | tr -d '"')
 echo "Operating System: $OS_NAME"
 
-if [ "$OS_NAME" = "$OS_UBUNTU" ]; then
+if [ "$OS_NAME" = "$OS_UBUNTU" ] || [ "$OS_NAME" = "$OS_DEBIAN_RPI" ]; then
 	source ubuntu/setup.sh
 	exit
 fi
