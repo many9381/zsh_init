@@ -40,8 +40,8 @@ install_oh_my_zsh
 # Install Additional package
 run_as_sudo apt install thefuck -y
 
-# Install lsd
-run_as_sudo apt install lsd -y
+# Install eza
+run_as_sudo apt install eza -y
 
 # Setting up an alias
 setup_alias_zshrc

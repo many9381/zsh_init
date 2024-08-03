@@ -92,8 +92,8 @@ setup_alias_zshrc() {
     # Setting up an alias for bat in .zshrc
     update_zshrc "alias cat"     "bat" true
 
-    # Setting up an alias for lsd in .zshrc
-    update_zshrc "alias ls"     "lsd"
+    # Setting up an alias for eza in .zshrc
+    update_zshrc "alias ls"     "eza --icons"
     update_zshrc "alias l"      "ls -l"
     update_zshrc "alias la"     "ls -a"
     update_zshrc "alias lla"    "ls -la"

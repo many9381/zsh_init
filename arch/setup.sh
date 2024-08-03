@@ -45,8 +45,8 @@ install_oh_my_zsh
 # Install Additional package
 run_as_sudo yay -S install thefuck --noconfirm
 
-# Install lsd
-yay -S lsd --noconfirm
+# Install eza
+yay -S eza --noconfirm
 
 # Setting up an alias
 setup_alias_zshrc
