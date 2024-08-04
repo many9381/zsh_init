@@ -11,9 +11,6 @@ run_as_sudo apt install neovim -y
 # Install bat
 run_as_sudo apt install bat -y
 
-# Install fzf
-run_as_sudo apt install fzf -y
-
 # Add bat link
 run_as_sudo ln -s /usr/bin/batcat /usr/bin/bat
 
@@ -45,3 +42,7 @@ run_as_sudo apt install eza -y
 
 # Setting up an alias
 setup_alias_zshrc
+
+# Install fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --all --no-bash
