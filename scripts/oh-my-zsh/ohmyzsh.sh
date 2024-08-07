@@ -59,6 +59,10 @@ install_oh_my_zsh() {
     # Install zsh-256color
     add_zinit_plugin chrissicool/zsh-256color
 
+    # Install zsh-completions
+    add_zinit_plugin zsh-users/zsh-completions
+    echo -e "autoload -U compinit && compinit\n" >> "$ZSH_RC"
+
     # Install oh-my-zsh full autoupdate
     # git clone https://github.com/Pilaton/OhMyZsh-full-autoupdate.git "$ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate"
     # add_zinit_plugin Pilaton/OhMyZsh-full-autoupdate
@@ -117,4 +121,26 @@ setup_alias_zshrc() {
     update_zshrc "export EDITOR" "$(which nvim)" true
 
     update_zshrc "POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD" "true" true
+
+    # History settings in .zshrc
+    update_zshrc "HISTSIZE" "5000"
+    update_zshrc "SAVEHIST" "5000"
+    # Write the history file in the ':start:elapsed;command' format.
+    echo "setopt EXTENDED_HISTORY" >> "$ZSH_RC"
+    # history file is updated immediately after a command is entered
+    echo "setopt INC_APPEND_HISTORY " >> "$ZSH_RC"
+    # Expire a duplicate event first when trimming history.
+    echo "setopt HIST_EXPIRE_DUPS_FIRST" >> "$ZSH_RC"
+    # Do not display a previously found event.
+    echo "setopt HIST_FIND_NO_DUPS" >> "$ZSH_RC"
+    # Delete an old recorded event if a new event is a duplicate.
+    echo "setopt HIST_IGNORE_ALL_DUPS" >> "$ZSH_RC"
+    # Do not record an event that was just recorded again.
+    echo "setopt HIST_IGNORE_DUPS" >> "$ZSH_RC"
+    # Do not record an event starting with a space.
+    echo "setopt HIST_IGNORE_SPACE" >> "$ZSH_RC"
+    # Do not write a duplicate event to the history file.
+    echo "setopt HIST_SAVE_NO_DUPS" >> "$ZSH_RC"
+    # Share history between all sessions.
+    echo "setopt SHARE_HISTORY" >> "$ZSH_RC"
 }
