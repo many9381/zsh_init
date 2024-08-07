@@ -16,6 +16,16 @@ add_plugin() {
     fi
 }
 
+add_zinit_plugin() {
+    local plugin="$1"
+    if grep -q -E ".*zinit light $plugin" "$ZSH_RC"; then
+        echo "Plugin '$plugin' already exists in .zshrc"
+        return
+    fi
+
+    echo "zinit light $plugin" >> "$ZSH_RC"
+}
+
 update_plugin() {
     for PLUGIN in "${PLUGINS[@]}"; do
         current_plugins="$current_plugins $PLUGIN"
@@ -27,7 +37,7 @@ update_plugin() {
 }
 
 # Install oh-my-zsh
-install_oh_my_zsh() {    
+install_oh_my_zsh() {
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
     zsh_shell=$(command -v zsh)
@@ -35,30 +45,30 @@ install_oh_my_zsh() {
     # If this user's login shell is already "zsh", do not attempt to switch.
     run_as_sudo chsh -s "$zsh_shell" "$USER"
 
+    # Install zsh plugin manager(zinit)
+    NO_INPUT=1 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+
     # Install oh-my-zsh plugins
 
     # Install F-Sy-H
-    git clone https://github.com/z-shell/F-Sy-H.git "$ZSH_CUSTOM/plugins/F-Sy-H"
-    add_plugin "F-Sy-H"
+    add_zinit_plugin z-shell/F-Sy-H
 
     # Install zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-    add_plugin "zsh-autosuggestions"
+    add_zinit_plugin zsh-users/zsh-autosuggestions
 
     # Install zsh-256color
-    git clone https://github.com/chrissicool/zsh-256color "$ZSH_CUSTOM/plugins/zsh-256color"
-    add_plugin "zsh-256color"
+    add_zinit_plugin chrissicool/zsh-256color
 
     # Install oh-my-zsh full autoupdate
-    git clone https://github.com/Pilaton/OhMyZsh-full-autoupdate.git "$ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate"
-    add_plugin "ohmyzsh-full-autoupdate"
+    # git clone https://github.com/Pilaton/OhMyZsh-full-autoupdate.git "$ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate"
+    # add_zinit_plugin Pilaton/OhMyZsh-full-autoupdate
+    # add_plugin "ohmyzsh-full-autoupdate"
 
     # Install powerlevel10k
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
-    sed -i -e 's/^ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSH_RC"
+    zinit ice depth=1
+    add_zinit_plugin romkatv/powerlevel10k
     cp ./config/p10k/.p10k.zsh ~
     echo -e "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh\n" >> "$ZSH_RC"
-
 
     # Install zsh-interactive-cd
     add_plugin zsh-interactive-cd
@@ -67,6 +77,7 @@ install_oh_my_zsh() {
     add_plugin tmuxinator
 
     update_plugin
+    zsh -i -c "zinit update --parallel"
 }
 
 update_zshrc() {
