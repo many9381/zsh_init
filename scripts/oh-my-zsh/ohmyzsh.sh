@@ -1,10 +1,45 @@
 #!/bin/bash
 
-ZSH=${ZSH:-$HOME/.oh-my-zsh}
+SETUP_HOME=${SETUP_HOME:-$HOME}
+SETUP_USER=${SETUP_USER:-$USER}
+SETUP_ROOT=${SCRIPT_DIR:-$(pwd)}
+ZSH=${ZSH:-$SETUP_HOME/.oh-my-zsh}
 ZSH_CUSTOM=${ZSH_CUSTOM:-$ZSH/custom}
-ZSH_RC="$HOME/.zshrc"
+ZSH_RC="$SETUP_HOME/.zshrc"
 
-current_plugins=$(grep -oP '^[^#]*plugins=\(\K[^\)]*' "$ZSH_RC" 2>/dev/null || echo "")
+portable_sed_inplace() {
+    local expression="$1"
+    local file_path="$2"
+
+    if sed --version >/dev/null 2>&1; then
+        sed -i -e "$expression" "$file_path"
+    else
+        sed -i '' -e "$expression" "$file_path"
+    fi
+}
+
+run_as_setup_user() {
+    if [ "$USER" = "$SETUP_USER" ] && ! is_run_as_root; then
+        "$@"
+        return $?
+    fi
+
+    sudo -u "$SETUP_USER" "$@"
+}
+
+append_if_missing() {
+    local line="$1"
+
+    touch "$ZSH_RC"
+
+    if ! grep -Fqx "$line" "$ZSH_RC" 2>/dev/null; then
+        printf '%s\n' "$line" >> "$ZSH_RC"
+    fi
+}
+
+current_plugins=$(
+    sed -n 's/^[[:space:]]*plugins=(\(.*\))[[:space:]]*$/\1/p' "$ZSH_RC" 2>/dev/null | head -n 1
+)
 PLUGINS=()
 
 add_plugin() {
@@ -18,12 +53,12 @@ add_plugin() {
 
 add_zinit_plugin() {
     local plugin="$1"
-    if grep -q -E ".*zinit light $plugin" "$ZSH_RC"; then
+    if grep -Fqx "zinit light $plugin" "$ZSH_RC" 2>/dev/null; then
         echo "Plugin '$plugin' already exists in .zshrc"
         return
     fi
 
-    echo "zinit light $plugin" >> "$ZSH_RC"
+    append_if_missing "zinit light $plugin"
 }
 
 update_plugin() {
@@ -32,21 +67,25 @@ update_plugin() {
     done
 
     updated_plugins=$(echo "$current_plugins" | tr ' ' '\n' | sort -u | tr '\n' ' ')
-    sed -i -e "/^plugins=/s/plugins=\(.*\)/plugins=(${updated_plugins})/" "$ZSH_RC"
+    portable_sed_inplace "/^plugins=/s/plugins=(.*)/plugins=(${updated_plugins})/" "$ZSH_RC"
 
 }
 
 # Install oh-my-zsh
 install_oh_my_zsh() {
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    run_as_setup_user sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
     zsh_shell=$(command -v zsh)
 
+    if [ -f /etc/shells ] && ! grep -qxF "$zsh_shell" /etc/shells; then
+        printf '%s\n' "$zsh_shell" | run_as_sudo tee -a /etc/shells >/dev/null
+    fi
+
     # If this user's login shell is already "zsh", do not attempt to switch.
-    run_as_sudo chsh -s "$zsh_shell" "$USER"
+    run_as_sudo chsh -s "$zsh_shell" "$SETUP_USER"
 
     # Install zsh plugin manager(zinit)
-    NO_INPUT=1 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+    run_as_setup_user env NO_INPUT=1 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 
     # Install oh-my-zsh plugins
 
@@ -61,7 +100,7 @@ install_oh_my_zsh() {
 
     # Install zsh-completions
     add_zinit_plugin zsh-users/zsh-completions
-    echo -e "autoload -U compinit && compinit\n" >> "$ZSH_RC"
+    append_if_missing "autoload -U compinit && compinit"
 
     # Install oh-my-zsh full autoupdate
     # git clone https://github.com/Pilaton/OhMyZsh-full-autoupdate.git "$ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate"
@@ -69,10 +108,10 @@ install_oh_my_zsh() {
     # add_plugin "ohmyzsh-full-autoupdate"
 
     # Install powerlevel10k
-    zinit ice depth=1
+    append_if_missing "zinit ice depth=1"
     add_zinit_plugin romkatv/powerlevel10k
-    cp ./config/p10k/.p10k.zsh ~
-    echo -e "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh\n" >> "$ZSH_RC"
+    cp "$SETUP_ROOT/config/p10k/.p10k.zsh" "$SETUP_HOME"
+    append_if_missing "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh"
 
     # Install zsh-interactive-cd
     add_plugin zsh-interactive-cd
@@ -81,7 +120,7 @@ install_oh_my_zsh() {
     add_plugin tmuxinator
 
     update_plugin
-    zsh -i -c "zinit update --parallel"
+    run_as_setup_user zsh -i -c "zinit update --parallel"
 }
 
 update_zshrc() {
@@ -92,7 +131,7 @@ update_zshrc() {
 
     if grep -q "^$config_name=" "$ZSH_RC"; then
         # if config name exist
-        sed -i -e "s|^$config_name=.*|$config_command|" "$ZSH_RC"
+        portable_sed_inplace "s|^$config_name=.*|$config_command|" "$ZSH_RC"
     else
         # if config name does not exist, append it to the end
         if [ "$add_newline" = true ]; then
@@ -126,21 +165,21 @@ setup_alias_zshrc() {
     update_zshrc "HISTSIZE" "5000"
     update_zshrc "SAVEHIST" "5000"
     # Write the history file in the ':start:elapsed;command' format.
-    echo "setopt EXTENDED_HISTORY" >> "$ZSH_RC"
+    append_if_missing "setopt EXTENDED_HISTORY"
     # history file is updated immediately after a command is entered
-    echo "setopt INC_APPEND_HISTORY " >> "$ZSH_RC"
+    append_if_missing "setopt INC_APPEND_HISTORY"
     # Expire a duplicate event first when trimming history.
-    echo "setopt HIST_EXPIRE_DUPS_FIRST" >> "$ZSH_RC"
+    append_if_missing "setopt HIST_EXPIRE_DUPS_FIRST"
     # Do not display a previously found event.
-    echo "setopt HIST_FIND_NO_DUPS" >> "$ZSH_RC"
+    append_if_missing "setopt HIST_FIND_NO_DUPS"
     # Delete an old recorded event if a new event is a duplicate.
-    echo "setopt HIST_IGNORE_ALL_DUPS" >> "$ZSH_RC"
+    append_if_missing "setopt HIST_IGNORE_ALL_DUPS"
     # Do not record an event that was just recorded again.
-    echo "setopt HIST_IGNORE_DUPS" >> "$ZSH_RC"
+    append_if_missing "setopt HIST_IGNORE_DUPS"
     # Do not record an event starting with a space.
-    echo "setopt HIST_IGNORE_SPACE" >> "$ZSH_RC"
+    append_if_missing "setopt HIST_IGNORE_SPACE"
     # Do not write a duplicate event to the history file.
-    echo "setopt HIST_SAVE_NO_DUPS" >> "$ZSH_RC"
+    append_if_missing "setopt HIST_SAVE_NO_DUPS"
     # Share history between all sessions.
-    echo "setopt SHARE_HISTORY" >> "$ZSH_RC"
+    append_if_missing "setopt SHARE_HISTORY"
 }

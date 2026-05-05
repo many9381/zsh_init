@@ -30,7 +30,7 @@ run_as_sudo() {
     local result=0
     if is_run_as_root; then
         "${@}"
-        result=$?
+        return $?
     fi
 
     if is_user_can_sudo; then
@@ -51,4 +51,3 @@ get_user_home_directory() {
         echo "$HOME"
     fi
 }
-
